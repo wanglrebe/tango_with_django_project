@@ -13,5 +13,7 @@ urlpatterns = [
     name='show_category'),
     path('add_category/', views.add_category, name='add_category'),
     path('register/', views.register, name='register'), # New mapping!
+    path('login/', views.user_login, name='login'),
+
 ]
 
