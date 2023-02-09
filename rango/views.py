@@ -8,7 +8,8 @@ from django.shortcuts import redirect
 from rango.forms import PageForm
 from django.urls import reverse
 from rango.forms import UserForm, UserProfileForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 
 
 
@@ -73,6 +74,7 @@ def show_category(request, category_name_slug):
 
 
 
+@login_required
 def add_category(request):
     form = CategoryForm()
 
@@ -98,6 +100,7 @@ def add_category(request):
 
 
 
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -235,3 +238,18 @@ def user_login(request):
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
         return render(request, 'rango/login.html')
+
+
+@login_required
+def restricted(request):
+    return render(request, 'rango/restricted.html')
+
+
+# Use the login_required() decorator to ensure only those logged in can
+# access the view.
+@login_required
+def user_logout(request):
+    # Since we know the user is logged in, we can now just log them out.
+    logout(request)
+    # Take the user back to the homepage.
+    return redirect(reverse('rango:index'))
